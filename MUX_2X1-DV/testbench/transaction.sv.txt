@@ -1,0 +1,12 @@
+class transaction;
+  rand bit [3:0] i0 , i1;
+  rand bit sel;
+  bit [3:0] out;
+  
+  function void display();
+  $display("---------TRANSACTION--------");
+  $display("Randomized Inputs are i0 = %0d , i1 = %0d , sel = %0d", i0,i1,sel);
+  $display("Output of 2x1 mux is out = %0d",out);
+  endfunction
+  
+endclass

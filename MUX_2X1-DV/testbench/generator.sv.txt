@@ -1,0 +1,24 @@
+class generator;
+  transaction pkt;
+  mailbox g2d;
+  
+  function new (mailbox g2d);
+    this.g2d = g2d;
+  endfunction
+  
+  
+task run();
+  repeat (4) begin
+    #2;
+    pkt = new();
+    assert(pkt.randomize())
+      else $error("Randomization failed");
+
+    g2d.put(pkt);
+
+    $display("[GENERATOR] time=%0t i0=%0d i1=%0d sel=%0d",
+             $time, pkt.i0, pkt.i1, pkt.sel);
+  end
+endtask
+
+endclass

@@ -1,0 +1,34 @@
+class input_monitor;
+  transaction pkt;
+  mailbox im2s;
+
+  virtual interface mux_2x1_intf.tb inter;
+
+  function new(mailbox im2s,
+               virtual interface mux_2x1_intf.tb inter);
+    this.im2s = im2s;
+    this.inter = inter;
+  endfunction
+
+  task run();
+    forever begin
+      @(inter.i0 or inter.i1 or inter.sel);
+
+      pkt = new();
+      pkt.i0  = inter.i0;
+      pkt.i1  = inter.i1;
+      pkt.sel = inter.sel;
+
+      case (pkt.sel)
+        1'b0:    pkt.out = pkt.i0;
+        1'b1:    pkt.out = pkt.i1;
+        default: pkt.out = 4'bxxxx;
+      endcase
+
+      $display("[INPUT MONITOR] i0=%0d i1=%0d sel=%0d expected_out=%0d",
+               pkt.i0, pkt.i1, pkt.sel, pkt.out);
+
+      im2s.put(pkt);
+    end
+  endtask
+endclass
